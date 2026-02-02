@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Un Mensaje para Minina</title>
+    <!-- Importamos fuentes bonitas -->
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-sobre: #ff8fa3;
+            --color-sobre-dark: #ff758f; /* Color para dar profundidad */
+            --color-papel: #fff5f7;
+            --color-texto: #d63384;
+            --background-gradient: linear-gradient(180deg, #89f7fe 0%, #66a6ff 100%); /* Cielo */
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; /* Hide scrollbars */
+            height: 100vh;
+            margin: 0;
+            background: var(--background-gradient);
+            font-family: 'Poppins', sans-serif;
+            position: relative; /* Necesario para el fondo animado */
+            transition: background 0.3s ease;
+        }
+
+        .wrapper {
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .envelope {
+            position: relative;
+            width: 80vw; /* Ancho adaptable a la pantalla */
+            max-width: 400px; /* Ancho máximo para pantallas grandes */
+            height: 50vw; /* Alto adaptable a la pantalla */
+            max-height: 250px; /* Alto máximo para pantallas grandes */
+            background-color: #ffe5ec; /* Color del interior del sobre */
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .wrapper.open .envelope {
+            transform: translateY(50px);
+        }
+
+        /* Tapa del sobre */
+        .envelope::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            z-index: 10; /* Encima de todo cuando está cerrado */
+            border-left: 40vw solid transparent;
+            border-right: 40vw solid transparent;
+            border-top: 28vw solid var(--color-sobre);
+            transform-origin: top;
+            transition: transform 0.5s ease-in-out 0.2s;
+        }
+
+        /* Bolsillo del sobre (Frente) */
+        .envelope::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            z-index: 5; /* Encima de la carta (cerrada), debajo de la tapa */
+            border-left: 40vw solid var(--color-sobre-dark);
+            border-right: 40vw solid var(--color-sobre-dark);
+            border-bottom: 28vw solid var(--color-sobre);
+            border-top: 22vw solid transparent;
+            border-radius: 0 0 10px 10px;
+        }
+
+        /* Ajustes para pantallas grandes */
+        @media (min-width: 500px) {
+            .envelope {
+                width: 400px;
+                height: 250px;
+            }
+            .envelope::before {
+                border-left-width: 200px;
+                border-right-width: 200px;
+                border-top-width: 140px;
+            }
+            .envelope::after {
+                border-left-width: 200px;
+                border-right-width: 200px;
+                border-bottom-width: 140px;
+                border-top-width: 110px;
+            }
+        }
+
+        .letter {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 360px;
+            /*  260px;*/
+            height: 85%;
+            background-color: var(--color-papel);
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+            transition: all 0.6s ease-in-out;
+            z-index: 1;
+            border-radius: 5px;
+            visibility: hidden; /* Ocultar el mensaje inicialmente */
+            overflow-y: auto;
+        }
+
+        .envelope .letter p {
+            position: relative; /* Para posicionar los emojis absolutamente */
+            color: #000;
+            font-size: 1rem;
+            line-height: 1.4;
+            margin-top: 10px;
+            text-align: left;
+            text-shadow: none;
+        }
+
+
+
+
+        /* Animación al hacer clic */
+        .wrapper.open .envelope::before {
+            transform: rotateX(180deg);
+            z-index: 0;
+            transition-delay: 0s;
+        }
+
+        .wrapper.open .envelope .letter { /* Mostrar solo cuando el sobre está abierto */
+            height: 60vh;
+            width: 90vw;
+            max-width: 350px;
+            transform: translate(-50%, 15%);
+            z-index: 10;
+            visibility: visible;
+        }
+
+
+        .heart {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 2rem;
+            z-index: 3;
+            transition: opacity 0.3s;
+        }
+
+        .wrapper.open .heart {
+            opacity: 0;
+        }
+        /* Fondo de corazones */
+        .heart-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Permite interactuar con los elementos debajo */
+            overflow: hidden;
+        }
+
+        .heart-container .heart {
+            position: absolute;
+            font-size: 1.5rem;
+            color: var(--color-sobre);
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-10vh) translateX(var(--random-x));
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) translateX(var(--random-x));
+                opacity: 0;
+            }
+        }
+
+        /* Estilos para la pantalla de inicio */
+        .slide-container {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            width: 100vw;
+        }
+
+        .slide {
+            flex: none;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            scroll-snap-align: start;
+            flex-direction: column;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+            position: relative; /* Para posicionar decoraciones */
+            overflow: hidden;
+        }
+
+        .slide h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3rem;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+            z-index: 10;
+        }
+
+        .slide p {
+            font-size: 1.5rem;
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+
+        .slide:nth-child(1) {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .slide:nth-child(2) {
+            background: linear-gradient(135deg, #5ee7df 0%, #b490ca 100%);
+        }
+
+        .slide:nth-child(3) {
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+        }
+
+        .slide:nth-child(4) {
+            background: linear-gradient(180deg, #a1c4fd 0%, #c2e9fb 100%); /* Cielo suave */
+        }
+
+        /* --- Decoraciones y Animaciones --- */
+        
+        .shape {
+            position: absolute;
+            opacity: 0.6;
+            z-index: 1;
+        }
+
+        .circle {
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .square {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(45deg);
+            animation: spin 10s linear infinite;
+        }
+
+        .heart-shape {
+            font-size: 3rem;
+            animation: pulse 2s infinite;
+        }
+
+        /* Paisaje Slide 4 */
+        .landscape {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .sun {
+            position: absolute;
+            top: 50px;
+            right: 30px;
+            width: 80px;
+            height: 80px;
+            background: #ffeb3b;
+            border-radius: 50%;
+            box-shadow: 0 0 40px #ffeb3b;
+            animation: float 5s ease-in-out infinite;
+        }
+
+        .cloud {
+            position: absolute;
+            background: #fff;
+            border-radius: 50px;
+            opacity: 0.8;
+        }
+
+        .ground {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 15vh;
+            background: #95e1d3;
+            border-radius: 50% 50% 0 0 / 20px 20px 0 0;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* --- Estilos para la Ventana Sorpresa (Modal) --- */
+        .modal {
+            display: none; /* Oculto por defecto */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.85); /* Fondo oscuro */
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: popIn 0.3s ease;
+            overflow-y: auto;
+            max-height: 90vh;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-content h2 {
+            color: #d63384;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+
+        .modal-content img {
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .btn-youtube {
+            display: inline-block;
+            background-color: #ff0000;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-family: 'Poppins', sans-serif;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            margin-bottom: 10px;
+        }
+
+        .clickable-word {
+            color: #d63384;
+            font-weight: bold;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .btn-close {
+            display: inline-block;
+            background-color: #6c757d;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: 'Poppins', sans-serif;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="slide-container">
+        <!-- Aquí se insertarán las slides desde js -->
+    </div>
+    <audio id="bg-music" loop>
+        <source src="pianoamor.mp3" type="audio/mpeg">
+    </audio>
+    <script src="slides.js"></script>
+</body>
+</html>
