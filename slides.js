@@ -47,10 +47,20 @@ document.addEventListener('DOMContentLoaded', function() {
         // Controlar visibilidad del corazón matemático de fondo
         const heartCanvas = document.getElementById('heart-canvas');
         if (stage === 'confirmation' || stage === 'success') {
-            if(heartCanvas) heartCanvas.style.display = 'none';
+            if(heartCanvas) {
+                heartCanvas.style.display = 'none';
+                heartCanvas.style.opacity = '0'; // Doble seguridad para ocultarlo
+            }
         } else {
-            if(heartCanvas) heartCanvas.style.display = 'block';
+            if(heartCanvas) {
+                heartCanvas.style.display = 'block';
+                heartCanvas.style.opacity = '1';
+            }
         }
+        
+        // Seguridad: Ocultar cualquier rastro del corazón 3D anterior (tech-canvas) si existe
+        const techCanvas = document.getElementById('tech-canvas');
+        if (techCanvas) techCanvas.style.display = 'none';
 
         if (stage === 'success') {
             slide.innerHTML = successContent;
