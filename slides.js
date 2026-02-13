@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (stage === 1) {
             title = 'SEGURA QUE NO :(? 😢';
         } else if (stage === 2) {
-            title = 'OK, ACEPTO EL NO SI LOGRAS PRESIONAR EL BOTON DE NO NUEVAMENTE 😈';
+            title = 'OK, ACEPTO EL NO SI LOGRAS PRESIONAR EL BOTON DE NO NUEVAMENTE :)';
             isMovingNo = true;
         }
 
