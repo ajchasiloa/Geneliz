@@ -74,7 +74,6 @@ document.addEventListener('DOMContentLoaded', function() {
             title = 'SEGURA SI PQ DESPUES NO TE VOY A DEJAR EN PAZ :c?';
             extraHtml = `
                 <img src="SEGURASI.JPG" class="confirmation-img" alt="¿Segura?">
-                <canvas id="tech-canvas" class="tech-canvas"></canvas>
             `;
         } else if (stage === 1) {
             title = 'SEGURA QUE NO :(? 😢';
@@ -96,8 +95,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Iniciar animación Tech si es la etapa de confirmación
         if (stage === 'confirmation') {
-            drawMatrixHeart(document.getElementById('tech-canvas'));
-            
             // Lógica para mover la imagen "Segura si" automáticamente
             const img = slide.querySelector('.confirmation-img');
             if (img) {
@@ -206,61 +203,6 @@ document.addEventListener('DOMContentLoaded', function() {
             prevX = x;
             prevY = y;
             
-            requestAnimationFrame(animate);
-        }
-        animate();
-    }
-
-    // Función para dibujar el Corazón Matrix 3D
-    function drawMatrixHeart(canvas) {
-        if (!canvas) return;
-        const ctx = canvas.getContext('2d');
-        let width = canvas.width = window.innerWidth;
-        let height = canvas.height = window.innerHeight;
-        const cx = width / 2;
-        const cy = height / 2;
-
-        const points = [];
-        // Generar puntos del corazón
-        for (let t = 0; t < Math.PI * 2; t += 0.1) {
-            // Fórmula del corazón
-            let x = 16 * Math.pow(Math.sin(t), 3);
-            let y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
-            
-            // Crear capas para dar volumen 3D
-            for (let z = -2; z <= 2; z += 0.5) {
-                 let scale = 12; 
-                 points.push({
-                     x: x * scale,
-                     y: y * scale,
-                     z: z * 10, // Profundidad
-                     char: Math.random() > 0.5 ? '1' : '0' // Binario
-                 });
-            }
-        }
-
-        let angle = 0;
-
-        function animate() {
-            if (!document.body.contains(canvas)) return; // Detener si el canvas ya no existe
-            ctx.clearRect(0, 0, width, height);
-            angle += 0.015; // Velocidad de rotación
-
-            points.forEach(p => {
-                // Rotación 3D alrededor del eje Y
-                let rx = p.x * Math.cos(angle) - p.z * Math.sin(angle);
-                let rz = p.x * Math.sin(angle) + p.z * Math.cos(angle);
-                
-                // Proyección simple de perspectiva
-                let px = cx + rx;
-                let py = cy + p.y; // Y se mantiene igual (más o menos)
-
-                // Dibujar carácter
-                // Color dinámico: Ciclo de colores románticos/tech
-                ctx.fillStyle = `hsl(${angle * 50 % 360}, 80%, 60%)`; 
-                ctx.font = '14px monospace';
-                ctx.fillText(p.char, px, py);
-            });
             requestAnimationFrame(animate);
         }
         animate();
