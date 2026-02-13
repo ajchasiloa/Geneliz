@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     const slideContainer = document.querySelector('.slide-container');
+    let moveImageInterval = null; // Variable para controlar el movimiento de la imagen
 
     // Contenido final (Carta de éxito)
     const successContent = `
@@ -32,6 +33,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Función para renderizar las etapas del flujo
     function renderStage(stage) {
+        // Limpiar intervalo de movimiento si existe
+        if (moveImageInterval) {
+            clearInterval(moveImageInterval);
+            moveImageInterval = null;
+        }
+
         slideContainer.innerHTML = ''; // Limpiar contenido anterior
         const slide = document.createElement('div');
         slide.classList.add('slide');
@@ -90,6 +97,18 @@ document.addEventListener('DOMContentLoaded', function() {
         // Iniciar animación Tech si es la etapa de confirmación
         if (stage === 'confirmation') {
             drawMatrixHeart(document.getElementById('tech-canvas'));
+            
+            // Lógica para mover la imagen "Segura si" automáticamente
+            const img = slide.querySelector('.confirmation-img');
+            if (img) {
+                moveImageInterval = setInterval(() => {
+                    img.style.position = 'absolute'; // Cambiar a absoluto para mover libremente
+                    const x = Math.random() * (window.innerWidth - img.offsetWidth);
+                    const y = Math.random() * (window.innerHeight - img.offsetHeight);
+                    img.style.left = `${Math.max(0, x)}px`;
+                    img.style.top = `${Math.max(0, y)}px`;
+                }, 2000);
+            }
         }
 
         // Lógica de los botones
