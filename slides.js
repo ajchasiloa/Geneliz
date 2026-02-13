@@ -50,6 +50,9 @@ document.addEventListener('DOMContentLoaded', function() {
             if(heartCanvas) {
                 heartCanvas.style.display = 'none';
                 heartCanvas.style.opacity = '0'; // Doble seguridad para ocultarlo
+                // Triple seguridad: Borrar el contenido del canvas
+                const ctx = heartCanvas.getContext('2d');
+                ctx.clearRect(0, 0, heartCanvas.width, heartCanvas.height);
             }
         } else {
             if(heartCanvas) {
@@ -83,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (stage === 'confirmation') {
             title = 'SEGURA SI PQ DESPUES NO TE VOY A DEJAR EN PAZ :c?';
             extraHtml = `
-                <img src="SEGURASI.JPG" class="confirmation-img" alt="¿Segura?">
+                <img src="segurasi.jpg" class="confirmation-img" alt="¿Segura?">
             `;
         } else if (stage === 1) {
             title = 'SEGURA QUE NO :(? 😢';

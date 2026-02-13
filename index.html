@@ -202,6 +202,8 @@
             overflow-x: auto;
             scroll-snap-type: x mandatory;
             width: 100vw;
+            z-index: 10; /* Asegurar que el contenido esté sobre el canvas */
+            position: relative;
         }
 
         .slide {
@@ -438,7 +440,7 @@
 
         /* Canvas para el corazón matemático */
         .heart-canvas {
-            position: absolute;
+            position: fixed; /* Fixed evita que afecte el layout del body */
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
