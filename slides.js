@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (stage === 'confirmation') {
             title = 'SEGURA SI PQ DESPUES NO TE VOY A DEJAR EN PAZ :c?';
             extraHtml = `
-                <img src="segurasi.jpg" class="confirmation-img" alt="¿Segura?">
+                <img src="segurasi.jpg?v=3" class="confirmation-img" alt="¿Segura?">
             `;
         } else if (stage === 1) {
             title = 'SEGURA QUE NO :(? 😢';
